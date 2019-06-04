@@ -3,7 +3,7 @@
 
 var Web3=require("web3");
 var contract = require("truffle-contract");
-var truffledemoinfo =  require('/project/ws_nodejs/eth/truffle/build/contracts/Truffledemo.json');
+var truffledemoinfo =  require('/project/ionc/IPOSContract/build/contracts/IPOS.json');
 
 
 var truffledemocontract = contract(truffledemoinfo);
@@ -17,8 +17,7 @@ var provider= new HDWalletProvider("709211b14d391b50edd06c2544d81f5a77b4cc066874
 */
 
 var HDWalletProvider = require("truffle-hdwallet-provider-privkey");
-var provider= new HDWalletProvider(["709211b14d391b50edd06c2544d81f5a77b4cc0668746569de5548c86a00bb28"], "http://localhost:8545");
-
+var provider= new HDWalletProvider(["b6925c213ea376afec527f660df7d5ea28878b3f4cd61d64d8691cce6ff1a361"], "http://192.168.23.178:8545");
 
 /*
 var HDWalletProvider = require("truffle-wallet-provider");
@@ -26,7 +25,7 @@ var provider= new HDWalletProvider("709211b14d391b50edd06c2544d81f5a77b4cc066874
 */
 
 
-var sendaddress = '0x9b511ccd1457b72380b817ffa2fd13a0f4b14bc7';
+var sendaddress = '0x9a04a58b0e74ab7d12af0b34fdc4275543452101';
 
 
 
@@ -95,45 +94,29 @@ truffledemocontract.at(contract_address).then(function(instance) {
 
 ///  调用刚才部署的合约
 
-var contract_address = "0x6c6ffeca9104eeaca917ac75dc424a45d334dd25";
+var contract_address = "0x0000000000000000000000000000000000000100";
 var truffleapidemoInstance;
+var web3 = new Web3();
 
 truffledemocontract.at(contract_address).then(function(instance) {
 
     truffleapidemoInstance=instance;
+
+    return  truffleapidemoInstance.mintPower.call(sendaddress);
+
+
+    /*let gasPrice = web3.eth.gasPrice;
     //以transaction方式与合约交互
-    return truffleapidemoInstance.set( 1888 , {from:sendaddress} );
+    return truffleapidemoInstance.deposit(  {from:sendaddress, gas: 300000,
+        gasPrice: gasPrice.toString(),
+        value: web3.toWei(5000000, 'ether')} );*/
 
 
-}).then(   result=> {
+}).then(   power=> {
 
-    // result 是一个对象，它包含下面这些值：
-    //
-    // result.tx      => 交易hash，字符型
-    // result.logs    => 在交易调用中触发的事件，数组类型
-    // result.receipt => 交易的接收对象，里面包含已使用的gas 数量
+    console.info(power)
+    console.info(web3.fromWei(power, 'ether').toString());
 
-    console.info(result.receipt);//返回交易ID
-
-    for (var i = 0; i < result.logs.length; i++) {
-        var log = result.logs[i];
-        if (log.event == "Transfer") {
-            console.log("from:", log.args._from);
-            console.log("to:", log.args._to);
-            console.log("amount:", log.args._value.toNumber());
-            break;
-        }
-    }
-
-
-}).then( ()=> {
-
-    // 调用Storage get 方法
-    return truffleapidemoInstance.get.call();
-
-}).then( result=> {
-
-    console.info( "the call result is : "+result.toString());
 
 }).catch( err=>{
 

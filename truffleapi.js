@@ -2,13 +2,13 @@ var Web3=require("web3");
 
 var contract = require("truffle-contract");
 
-var truffledemoinfo =  require('/project/ws_nodejs/eth/truffle/build/contracts/Truffledemo.json');
+var truffledemoinfo =  require('/project/ionc/IPOSContract/build/contracts/IPOS.json');
 
 
 // 返回合约抽象
 var truffledemo = contract(truffledemoinfo)
 
-var provider = new Web3.providers.HttpProvider("http://localhost:8545");
+var provider = new Web3.providers.HttpProvider("http://192.168.23.99:8545");
 truffledemo.setProvider(provider);
 
 
